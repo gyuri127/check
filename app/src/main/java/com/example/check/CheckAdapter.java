@@ -12,16 +12,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.CheckViewHolder>  {
+public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.CheckViewHolder>  implements OnCheckItemClickListener{
 
     private Context mContext;
     private ArrayList<Items> items = new ArrayList<>();
     private int position;
+    OnCheckItemClickListener listener;
 
     public CheckAdapter(Context mContext) {
         this.mContext = mContext;
         this.items = items;
     }
+
+    public void setOnItemClicklistener(OnCheckItemClickListener listener){
+        this.listener = listener;
+    }
+
+    @Override
+    public void onItemClick(CheckViewHolder holder, View view, int position) {
+        if(listener != null){
+            listener.onItemClick(holder,view,position);
+        }
+    }
+
 
 
 
@@ -38,6 +51,16 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.CheckViewHol
 
             drink_image= itemView.findViewById(R.id.drink_image);
             drink_name= itemView.findViewById(R.id.drink_name);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(listener != null){
+                        listener.onItemClick(CheckViewHolder.this, v, position);
+                    }
+                }
+            });
 
 
         }
@@ -79,6 +102,9 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.CheckViewHol
         return items.get(position);
     }
 
+    public Items getItem(int position){
+        return items.get(position);
+    }
 
     public void addItem(Items item){
         items.add(item);
